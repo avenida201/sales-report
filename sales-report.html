@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Sales Report</title>
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 16px;
+  background: #f2f2f7;
+}
+h2 {
+  text-align: center;
+}
+input, textarea, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+button {
+  background: #007aff;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+.output {
+  white-space: pre-wrap;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Daily Sales Report</h2>
+
+<input id="avenida" placeholder="Avenida">
+
+<input id="datetime" disabled>
+
+<input id="netSales" placeholder="Net Sales" type="number">
+<input id="tc" placeholder="TC" type="number">
+<input id="mtd" placeholder="MTD" type="number">
+
+<input id="bep" placeholder="BEP">
+<input id="tcMonth" placeholder="TC / Month" type="number">
+
+<textarea id="items" placeholder="86 Items"></textarea>
+
+<button onclick="generate()">Generate Report</button>
+
+<div class="output" id="output"></div>
+
+<script>
+function generate() {
+  const avenida = avenidaEl.value;
+  const net = Number(netSales.value) || 0;
+  const tcVal = Number(tc.value) || 0;
+  const mtdVal = Number(mtd.value) || 0;
+
+  const avgPP = tcVal > 0 ? net / tcVal : 0;
+  const acBill = avgPP;
+  const acGuest = avgPP;
+
+  const day = new Date().getDate();
+  const ads = day > 0 ? mtdVal / day : 0;
+
+  const message =
+`Avenida: ${avenida}
+Date: ${datetime.value}
+
+Net Sales: ₱${net.toFixed(2)}
+TC: ${tc.value}
+Average PP: ₱${avgPP.toFixed(2)}
+
+MTD: ₱${mtdVal.toFixed(2)}
+ADS: ₱${ads.toFixed(2)}
+BEP: ${bep.value}
+
+TC / Month: ${tcMonth.value}
+AC / Bill: ₱${acBill.toFixed(2)}
+AC / Guest: ₱${acGuest.toFixed(2)}
+
+86 Items:
+${items.value}`;
+
+  output.textContent = message;
+
+  navigator.share({
+    text: message
+  });
+}
+
+const avenidaEl = document.getElementById("avenida");
+const datetime = document.getElementById("datetime");
+const netSales = document.getElementById("netSales");
+const tc = document.getElementById("tc");
+const mtd = document.getElementById("mtd");
+const bep = document.getElementById("bep");
+const tcMonth = document.getElementById("tcMonth");
+const items = document.getElementById("items");
+
+datetime.value = new Date().toLocaleString();
+</script>
+
+</body>
+</html>
